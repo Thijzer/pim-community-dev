@@ -77,6 +77,7 @@ define([
      */
     initialize: function(meta) {
       this.config = meta.config;
+      this.validationErrors = [];
 
       state = {
         associationTarget: 'products',
@@ -158,6 +159,7 @@ define([
       );
 
       this.listenTo(this.getRoot(), 'pim_enrich:form:entity:post_update', this.postUpdate.bind(this));
+      this.listenTo(this.getRoot(), 'pim_enrich:form:entity:validation_error', this.setValidationErrors.bind(this));
 
       this.listenTo(
         this.getRoot(),
@@ -233,7 +235,7 @@ define([
       return this;
     },
 
-    updateAssociationCountInSidebar: function () {
+    updateAssociationCountInSidebar: function() {
       const newAssociationCount = this.getAssociationCount();
       if (this.associationCount !== newAssociationCount) {
         this.associationCount = newAssociationCount;
@@ -244,6 +246,12 @@ define([
           label: __('pim_enrich.entity.product.module.associations.title', {count: newAssociationCount}),
         });
       }
+    },
+
+    setValidationErrors: function ({response: {values}}) {
+      this.validationErrors = values;
+      ReactDOM.unmountComponentAtNode(document.getElementById('product-quantified-associations'));
+      this.renderQuantifiedAssociations();
     },
 
     /**
@@ -290,7 +298,9 @@ define([
         products: [],
         product_models: [],
       };
-      const parentQuantifiedAssociations = this.getFormData().meta.parent_quantified_associations[associationTypeCode] || {
+      const parentQuantifiedAssociations = this.getFormData().meta.parent_quantified_associations[
+        associationTypeCode
+      ] || {
         products: [],
         product_models: [],
       };
@@ -299,9 +309,13 @@ define([
         quantifiedAssociations,
         parentQuantifiedAssociations,
         associationTypeCode,
+        errors: this.validationErrors,
         onAssociationsChange: updatedAssociations => {
           const formData = this.getFormData();
-          formData.quantified_associations = {...formData.quantified_associations, [associationTypeCode]: updatedAssociations};
+          formData.quantified_associations = {
+            ...formData.quantified_associations,
+            [associationTypeCode]: updatedAssociations,
+          };
 
           this.setData(formData, {silent: true});
           this.getRoot().trigger('pim_enrich:form:entity:update_state');

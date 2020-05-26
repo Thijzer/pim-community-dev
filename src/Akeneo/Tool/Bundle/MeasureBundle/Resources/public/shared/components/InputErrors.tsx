@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {ValidationError} from 'akeneomeasure/model/validation-error';
+import {ValidationError} from '@akeneo-pim-community/shared';
 
 const Container = styled.div`
   .AknFieldContainer-validationError {

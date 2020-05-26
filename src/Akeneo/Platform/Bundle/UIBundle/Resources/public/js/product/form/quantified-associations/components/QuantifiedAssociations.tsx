@@ -11,6 +11,7 @@ import {
   HelperLevel,
   UnlinkIcon,
   useAkeneoTheme,
+  ValidationError,
 } from '@akeneo-pim-community/shared';
 import {
   Row,
@@ -65,6 +66,7 @@ type QuantifiedAssociationsProps = {
   quantifiedAssociations: QuantifiedAssociation;
   parentQuantifiedAssociations: QuantifiedAssociation;
   associationTypeCode: string;
+  errors: ValidationError[];
   onAssociationsChange: (quantifiedAssociations: QuantifiedAssociation) => void;
   onOpenPicker: () => Promise<Row[]>;
 };
@@ -73,6 +75,7 @@ const QuantifiedAssociations = ({
   quantifiedAssociations,
   parentQuantifiedAssociations,
   associationTypeCode,
+  errors,
   onOpenPicker,
   onAssociationsChange,
 }: QuantifiedAssociationsProps) => {
@@ -125,6 +128,8 @@ const QuantifiedAssociations = ({
     (row: Row) => setRowCollection(rowCollection => updateRowInCollection(rowCollection, row)),
     []
   );
+
+  console.log(errors);
 
   return (
     <>
