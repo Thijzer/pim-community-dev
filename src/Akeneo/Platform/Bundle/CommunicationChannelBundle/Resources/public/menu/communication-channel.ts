@@ -1,6 +1,6 @@
 import * as Backbone from 'backbone';
 import * as _ from 'underscore';
-import CampaignFetcher from 'akeneocommunicationchannel/fetcher/campaign-fetcher';
+import CampaignFetcher from 'akeneocommunicationchannel/fetcher/campaign';
 
 const __ = require('oro/translator');
 const CommunicationChannelTemplate = require('akeneo/template/menu/communication-channel');
